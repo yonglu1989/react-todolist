@@ -1,0 +1,65 @@
+.list-item {
+    background-color: rgb(246, 246, 246);
+    margin-bottom: 10px;
+}
+
+.detail-button{
+    background: none;
+    cursor: pointer;
+    border: 1px solid #1976d2;
+    border-radius: 5px;
+    color: #1976d2;
+    min-height: 26px;
+    min-width: 60px;
+    margin-right: 20px;
+}
+
+.detail-button-completed{
+    background: none;
+    cursor: pointer;
+    border: 1px solid #bbd4ed;
+    border-radius: 5px;
+    color: #bbd4ed;
+    min-height: 26px;
+    min-width: 60px;
+    margin-right: 20px;
+}
+
+.completed-icon {
+    color: rgb(192, 191, 191);
+}
+
+.completed-text {
+    color: rgb(192, 191, 191);
+    text-decoration: line-through;
+}
+
+.detail-button:hover{
+    background: #1976d2;
+    border: 1px solid #073768;
+    color: white;
+}
+
+.date-style {
+    background: none;
+    border: none;
+    color: inherit;
+}
+
+.date-style-completed {
+    background: none;
+    border: none;
+    color: rgb(192, 191, 191);
+}
+
+.low-priority {
+    border-left: 4px solid green;
+}
+
+.medium-priority {
+    border-left: 4px solid rgb(211, 211, 60);
+}
+
+.high-priority {
+    border-left: 4px solid red;
+}
