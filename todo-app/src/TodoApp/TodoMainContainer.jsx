@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect, useRef, useCallback } from "react";
 import CssBaseline from '@mui/material/CssBaseline';
 import {
     Box, AppBar, Toolbar, Typography, Drawer,
@@ -15,11 +15,20 @@ import axios from "axios";
 import TodoItem from "./TodoItem";
 import dayjs from 'dayjs';
 import {v4 as uuid} from 'uuid'
+import useAxios from './hooks/useAxios'
 
 export default function TodoMainContainer() {
     const [data, setData] = useState([])
     const [filter, setFilter] = useState("")
+    const [pageNum, setPageNum] = useState(1)
     const [selectedIndex, setSelectedIndex] = useState(0)
+    const {
+        isLoading,
+        isError,
+        error,
+        results,
+        hasNextPage
+    } = useAxios(pageNum)
     const [dialog, setDialog] = useState({
         open: false,
         action: "None",
@@ -29,6 +38,22 @@ export default function TodoMainContainer() {
         open: false,
         todo: null
     })
+
+    const intObserver = useRef()
+    const lastPostRef = useCallback(post => {
+        if (isLoading) return
+
+        if (intObserver.current) intObserver.current.disconnect()
+
+        intObserver.current = new IntersectionObserver(posts => {
+            if (posts[0].isIntersecting && hasNextPage) {
+                console.log('We are near the last post!')
+                setPageNum(prev => prev + 1)
+            }
+        })
+
+        if (post) intObserver.current.observe(post)
+    }, [isLoading, hasNextPage])
 
     const filterProps = (value) => ({
         selected: selectedIndex === value,
@@ -208,9 +233,26 @@ export default function TodoMainContainer() {
                     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                         <Toolbar />
                         <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                                {data.map((item)=> {
+                                {results.map((item, i)=> {
+                                    if (results.length === i+1) {
+                                        return (
+                                            <TodoItem
+                                            ref={lastPostRef}
+                                            key={item.id} 
+                                            id={item.id} 
+                                            title={item.title} 
+                                            desc={item.description}
+                                            date={item.date} 
+                                            status={item.status}
+                                            priority={item.priority}
+                                            handleUpdate={handleUpdate}
+                                            handleDialogue={handleDialogue}
+                                            handleDetails={handleDetails}
+                                        />
+                                        )
+                                    }
                                     return(
-                                        <TodoItem 
+                                        <TodoItem
                                             key={item.id} 
                                             id={item.id} 
                                             title={item.title} 
