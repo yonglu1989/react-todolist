@@ -33,10 +33,10 @@ const TodoItem = React.forwardRef(({id, title, date, status, handleUpdate, handl
                                         :  priority === 1
                                         ? "medium-priority"
                                         : "high-priority"
-
+    const refResult = ref ? ref : null
     return(
         <ListItem
-            ref={ref}
+            ref={refResult}
             className={"list-item" + " " + priorityString}
             key={id}
             secondaryAction={

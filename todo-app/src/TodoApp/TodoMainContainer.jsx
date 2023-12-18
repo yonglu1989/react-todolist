@@ -27,8 +27,9 @@ export default function TodoMainContainer() {
         isError,
         error,
         results,
-        hasNextPage
-    } = useAxios(pageNum)
+        hasNextPage,
+        setResults
+    } = useAxios(pageNum, filter)
     const [dialog, setDialog] = useState({
         open: false,
         action: "None",
@@ -39,6 +40,7 @@ export default function TodoMainContainer() {
         todo: null
     })
 
+    // Infinite Scroll Logic
     const intObserver = useRef()
     const lastPostRef = useCallback(post => {
         if (isLoading) return
@@ -55,6 +57,7 @@ export default function TodoMainContainer() {
         if (post) intObserver.current.observe(post)
     }, [isLoading, hasNextPage])
 
+    // Filter Logic
     const filterProps = (value) => ({
         selected: selectedIndex === value,
         onClick: () => setSelectedIndex(value)
@@ -97,7 +100,7 @@ export default function TodoMainContainer() {
     }
 
     useEffect(()=> {
-        getData()
+        setPageNum(1)
     }, [filter])
 
     const deleteTodo = (id) => {
